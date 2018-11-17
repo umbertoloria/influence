@@ -18,10 +18,12 @@ public class Camera {
 		double aspRatio = (double) ww / wh;
 
 		if (aspRatio > 1) {
-			this.sx = 2d / (aspRatio * zoom);
+			this.sx = 2d / (zoom * aspRatio);
 			this.sy = -2d / zoom;
+		} else {
+			this.sx = -2d / zoom;
+			this.sy = 2d / (zoom / aspRatio);
 		}
-		// FIXME: completare anche con lo schermo più alto che largo.
 
 		this.ox = -zoom / 2;
 		this.oy = -zoom / 2;

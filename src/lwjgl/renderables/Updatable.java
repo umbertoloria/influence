@@ -2,6 +2,6 @@ package lwjgl.renderables;
 
 public interface Updatable {
 
-	void update();
+	void update(double delta);
 
 }

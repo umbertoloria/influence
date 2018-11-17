@@ -1,42 +1,58 @@
 package popolazione;
 
+import interessi.Amicizia;
+import interessi.Socialità;
 import launcher.Launcher;
+import lwjgl.renderables.Updatable;
+import persone.Aspetto;
+import persone.Carattere;
 import persone.Persona;
 
 import java.util.ArrayList;
 
-public class Popolazione {
+public class Popolazione implements Updatable {
 
-	private String[] nomi_m = {"Umberto", "Alessio", "Michele", "Daniele", "Emanuele", "Donato", "Alessandro",
+	private String[] nomi_m = {"Roberto", "Alessio", "Michele", "Daniele", "Emanuele", "Donato", "Alessandro",
 			"Francesco", "Antonio"};
-	private String[] nomi_f = {"Serena", "Alessia", "Michela", "Daniela", "Emanuela", "Dominique", "Alessandra",
+	private String[] nomi_f = {"Sara", "Alessia", "Michela", "Daniela", "Emanuela", "Dominique", "Alessandra",
 			"Francesca", "Lucia"};
 	private String[] cognomi = {"Loria", "D'Urso", "Panichella", "Martino", "Napoli"};
 
-	private ArrayList<Generazione> generazioni = new ArrayList<>();
+	private ArrayList<Persona> persone = new ArrayList<>();
+	private Socialità socialità = new Socialità(persone);
+	private Amicizia amicizia = new Amicizia(persone);
 
 	public Popolazione() {
-		generazioni.add(new Generazione());
 
-		String[] names = generateNames(true, 0);
-		Persona maschio = new Persona(names[0], names[1], true);
+		Persona ul = new Persona("Umberto", "Loria", true,
+				new Carattere(4, 7, 3, 7),
+				new Aspetto(7));
 
-		names = generateNames(false, 0);
-		Persona femmina = new Persona(names[0], names[1], false);
+		Persona sd = new Persona("Serena", "D'Urso", false,
+				new Carattere(6, 6, 5, 6),
+				new Aspetto(7));
 
-		generazioni.get(0).populate(maschio);
-		generazioni.get(0).populate(femmina);
-
-		Launcher.gw.add(maschio);
-		Launcher.gw.add(femmina);
+		Persona.amici(ul, sd);
+		Persona.fidanzamento(ul, sd);
+		persone.add(ul);
+		persone.add(sd);
+		Launcher.gw.add(this);
 	}
 
-	public String[] generateNames(boolean maschio, int genIndex) {
+	private String[] generateNames(boolean maschio, int genIndex) {
 		String[] res = new String[2];
 		String[] nomi = maschio ? nomi_m : nomi_f;
+		boolean busy;
 		for (String nome : nomi) {
 			for (String cognome : cognomi) {
-				if (!generazioni.get(genIndex).exists(nome, cognome, true)) {
+				busy = false;
+				for (Persona persona : persone) {
+					if (persona.getNome().equalsIgnoreCase(nome) && persona.getCognome().equalsIgnoreCase(cognome)) {
+						busy = true;
+						break;
+					}
+				}
+				if (!busy) {
 					res[0] = nome;
 					res[1] = cognome;
 					return res;
@@ -44,6 +60,11 @@ public class Popolazione {
 			}
 		}
 		return res;
+	}
+
+	public void update(double delta) {
+		socialità.update(delta);
+		amicizia.update(delta);
 	}
 
 }

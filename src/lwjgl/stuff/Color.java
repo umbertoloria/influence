@@ -34,15 +34,13 @@ public class Color {
 			}
 		}
 		val = (int) (val / (double) str.length());
-		System.out.println(val);
-		// FIXME: 29 e 31 stesso colore
 
 		// 52 tutte le lettere maiuscole e minuscole
 		int c = (int) (0xffffff / 52d * val);
 
-		float r = (c & 0xff0000) << 24;
-		float g = (c & 0x00ff00) << 16;
-		float b = (c & 0x0000ff) << 8;
+		float r = (c & 0xff0000) / 256f / 256f / 256f;
+		float g = (c & 0x00ff00) / 256f / 256f;
+		float b = (c & 0x0000ff) / 256f;
 
 		return new Color(r, g, b);
 	}

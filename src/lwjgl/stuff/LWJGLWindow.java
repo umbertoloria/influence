@@ -112,7 +112,7 @@ public abstract class LWJGLWindow {
 			camera.enable();
 			render();
 			camera.disable();
-			update();
+			update(getDelta());
 			glfwSwapBuffers(window); // swap the color buffers
 
 			// Poll for window events. The key callback above will only be
@@ -121,8 +121,17 @@ public abstract class LWJGLWindow {
 		}
 	}
 
+	private double lastTime;
+
+	private double getDelta() {
+		double currentTime = glfwGetTime();
+		double delta = currentTime - lastTime;
+		lastTime = currentTime;
+		return delta;
+	}
+
 	public abstract void render();
 
-	public abstract void update();
+	public abstract void update(double delta);
 
 }

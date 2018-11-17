@@ -1,10 +1,11 @@
 package popolazione;
 
+import lwjgl.renderables.Updatable;
 import persone.Persona;
 
 import java.util.ArrayList;
 
-public class Generazione {
+public class Generazione implements Updatable {
 
 	private ArrayList<Persona> persone = new ArrayList<>();
 
@@ -23,4 +24,9 @@ public class Generazione {
 		return false;
 	}
 
+	public void update(double delta) {
+		for (Persona persona : persone) {
+			persona.update(delta);
+		}
+	}
 }
